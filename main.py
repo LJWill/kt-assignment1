@@ -4,7 +4,10 @@ import time
 import math
 import operator
 import Levenshtein as lv
+import jellyfish as jf
 
+def apply_damerau_levenshtein(misspell, dictionary):
+    pass
 
 def apply_lev_dist(misspell, dictionary):
 
@@ -18,12 +21,15 @@ def apply_lev_dist(misspell, dictionary):
             if '/' not in mis_word:
                 for dict_word in dictionary:
                     similarity = lv.ratio(mis_word, dict_word) 
-                    predict_words.append((mis_word, similarity))
+                    predict_words.append((dict_word, similarity))
 
-                best_pred = sorted(predict_words, key=operator.itemgetter(1))[0]
-                result.append(best_pred)
+                first_five_pred = sorted(predict_words, key=operator.itemgetter(1), reverse=True)[:5]
+                pred_words = [x[0] for x in first_five_pred]
+
+                result.append(pred_words)
 
             else:
+                # do not predict when  word contains '/', a lazy method
                 result.append(mis_word)
 
         # if mis_word in dictionary
@@ -45,10 +51,27 @@ def apply_ngram(misspell, dictionary):
         if mis_word not in dictionary:
             if '/' not in mis_word:
                 """search a list of approximate words using ngram search"""
+                
+                pred_words = []
+                if G.search(mis_word, threshold = 0.4):
+                    search_result = G.search(mis_word, threshold = 0.4)
 
-                pred_word = G.find(mis_word) if G.find(mis_word) else mis_word
+                    try:    search_result[0][1]
+                    except: search_result = (mis_word, 1)
+                    else:   highest_score = search_result[0][1]
+                    
+                    for (w,s) in search_result:
+                        if math.isclose(s, highest_score):
+                            pred_words.append(w)
 
-                result.append(pred_word)
+                    if len(pred_words) == 1:
+                        result.append(pred_words[0])
+                    else:
+                        result.append(pred_words)
+
+                else:
+                    result.append(G.find(mis_word))
+
 
             else:
                 multi_words = mis_word.split('/')
@@ -81,7 +104,7 @@ def predict(misspell, dictionary, method):
     elif method == 'levenshtein_distance':
         result = apply_lev_dist(misspell, dictionary)
     elif method == 'weighted_levenshtein_distance':
-        pass
+        result = apply_damerau_levenshtein(misspell, dictionary)
     elif method == 'editx':
         pass
 
@@ -93,7 +116,7 @@ def main(argv):
         'n'     : 'ngram',
         's'     : 'soundx',
         'ld'    : 'levenshtein_distance',
-        'wld'   : 'weighted_levenshtein_distance',
+        'dld'   : 'damerau_levenshtein_distance',
         'e'     : 'editx'
     }
 
