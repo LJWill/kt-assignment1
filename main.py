@@ -297,7 +297,7 @@ def predict(misspell, dictionary, method):
     elif method == 'soundex levenshtein':           result = apply_soundex_levenshtein(misspell, dictionary)
     elif method == 'edit_distance':                 result = apply_edit_distance(misspell, dictionary)
     elif method == 'refined soundex':               result = apply_refined_soundex(misspell, dictionary)
-
+       
     return result
 
 
@@ -323,7 +323,14 @@ def main(argv):
     if (option in option_dict.keys()):
         predict_result = predict(misspell, dictionary, option_dict.get(option))
     else:
-        print("method not in scope")
+        print("METHOD NOT IN SCOPE")
+        print('Available commands are as follows: \n')
+        print('n  for ngram, default n is 3')
+        print('s  for soundex')
+        print('sl for soundex levenshtein')
+        print('e  for edit distance')
+        print('rs for refined soundex')
+        return
 
     with open('output.txt', 'w') as f:
         for item in predict_result:
