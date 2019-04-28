@@ -37,6 +37,10 @@ with open('output/ngram_single_predict.txt') as f:
 with open('output/soundex.txt') as f:
     soundex = f.read().splitlines()
 
+# soundex levenshtein
+with open('output/soundex_lev.txt') as f:
+    soundex_lev = f.read().splitlines()
+
 def accuracy(pred_file, correct_file):
     total_predict = len(correct_file)
     right_num = 0
@@ -148,6 +152,13 @@ def main(argv):
     soundex_recall    = recall(soundex, correct)
     print('soundex precision: ', soundex_precision)
     print('soundex recall: ', soundex_recall)
+
+    print('--------------------------------------------------------------------------')
+
+    soundex_lev_precision = precision(soundex_lev, correct)
+    soundex_lev_recall    = recall(soundex_lev, correct)
+    print('soundex levenshtein precision: ', soundex_lev_precision)
+    print('soundex levenshtein recall: ', soundex_lev_recall)
 
     print('--------------------------------------------------------------------------')
 

@@ -156,14 +156,11 @@ def apply_soundex_levenshtein(misspell, dictionary):
                     else:
                         continue
 
-                    pred_word_list = sorted(predict_words, key=operator.itemgetter(1), reverse=False)
-                    min_dist   = pred_word_list[0][1]
-                    pred_words = [x[0] for x in pred_word_list if x[1] == min_dist]
+                pred_word_list = sorted(predict_words, key=operator.itemgetter(1), reverse=False)
+                min_dist   = pred_word_list[0][1]
+                pred_words = [x[0] for x in pred_word_list if x[1] == min_dist]
 
-                    result.append(pred_words)
-
-                else:
-                    result.append(mis_word)
+                result.append(pred_words)
 
             else:
                 # do not predict when  word contains '/', a lazy method
