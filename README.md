@@ -14,3 +14,11 @@
 
     + change method in edit distance:
         + comment out 'method_name' in apply_edit_distance function to enable different distance calculation methods
+
+### External Libraries used:
+    
+    + ngram
+    + math
+    + operator
+    + Levenshtein
+    + jellyfish 
